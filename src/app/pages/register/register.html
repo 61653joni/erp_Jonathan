@@ -1,37 +1,82 @@
 <div style="min-height:100vh; display:flex; align-items:center; justify-content:center; background:#0f0f0f;">
   <div style="width: 400px;">
     <p-card>
-      <h2 style="color:#1f2937; text-align:center; margin-bottom:24px;"> Crear Cuenta</h2>
+      <h2 style="text-align:center; margin-bottom:24px; color:#1f2937;">Crear Cuenta</h2>
 
-      <div style="display:flex; flex-direction:column; gap:16px;">
+      <div style="display:flex; flex-direction:column; gap:12px;">
+
+        <!-- Usuario -->
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="color:#6b7280;">Usuario</label>
+          <input pInputText [(ngModel)]="usuario" placeholder="Usuario" style="width:100%;" />
+        </div>
+
+        <!-- Nombre -->
         <div style="display:flex; flex-direction:column; gap:6px;">
           <label style="color:#6b7280;">Nombre completo</label>
           <input pInputText [(ngModel)]="nombre" placeholder="Tu nombre" style="width:100%;" />
         </div>
 
+        <!-- Email -->
         <div style="display:flex; flex-direction:column; gap:6px;">
           <label style="color:#6b7280;">Correo electrónico</label>
           <input pInputText [(ngModel)]="email" placeholder="ejemplo@correo.com" style="width:100%;" />
         </div>
 
+        <!-- Dirección -->
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="color:#6b7280;">Dirección</label>
+          <input pInputText [(ngModel)]="direccion" placeholder="Dirección" style="width:100%;" />
+        </div>
+
+        <!-- Teléfono -->
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="color:#6b7280;">Teléfono</label>
+          <input pInputText [(ngModel)]="telefono" placeholder="Solo números" style="width:100%;" />
+          <small style="color:red" *ngIf="getErrorTelefono()">{{ getErrorTelefono() }}</small>
+        </div>
+
+        <!-- Fecha nacimiento -->
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="color:#6b7280;">Fecha de nacimiento</label>
+          <input type="date" [(ngModel)]="fechaNacimiento" style="width:100%;" />
+          <small style="color:red" *ngIf="getErrorEdad()">{{ getErrorEdad() }}</small>
+        </div>
+
+        <!-- Contraseña -->
         <div style="display:flex; flex-direction:column; gap:6px;">
           <label style="color:#6b7280;">Contraseña</label>
-          <input pInputText type="password" [(ngModel)]="password" placeholder="••••••••" style="width:100%;" />
+          <input pInputText type="password" [(ngModel)]="password" placeholder="••••••••••" style="width:100%;" />
         </div>
 
+        <!-- Confirmar contraseña -->
         <div style="display:flex; flex-direction:column; gap:6px;">
           <label style="color:#6b7280;">Confirmar contraseña</label>
-          <input pInputText type="password" [(ngModel)]="confirmar" placeholder="••••••••" style="width:100%;" />
+          <input pInputText type="password" [(ngModel)]="confirmar" placeholder="••••••••••" style="width:100%;" />
+          <small style="color:red" *ngIf="getErrorPassword()">{{ getErrorPassword() }}</small>
         </div>
 
-        <p-button label="Registrarse" severity="success" styleClass="w-full" />
+        <!-- Botón de registro -->
+        <p-button 
+          label="Registrarse"
+          severity="success"
+          styleClass="w-full"
+          [disabled]="!formularioValido()"
+          (onClick)="registrar()" />
 
-        <p style="text-align:center; color:#6b7280;">
+        <!-- Link para iniciar sesión -->
+        <p style="text-align:center; color:#6b7280; margin-top:12px;">
           ¿Ya tienes cuenta?
           <a [routerLink]="['/login']" style="color:#2563eb;">Inicia sesión aquí</a>
         </p>
 
-        <p-button label="Volver" severity="secondary" [routerLink]="['/landing']" styleClass="w-full" />
+        <!-- Botón volver -->
+        <p-button 
+          label="Volver"
+          severity="secondary"
+          [routerLink]="['/landing']"
+          styleClass="w-full" />
+
       </div>
     </p-card>
   </div>

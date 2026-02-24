@@ -1,27 +1,44 @@
 <div style="min-height:100vh; display:flex; align-items:center; justify-content:center; background:#0f0f0f;">
   <div style="width: 400px;">
     <p-card>
-      <h2 style="color:#1f2937; text-align:center; margin-bottom:24px;"> Iniciar Sesión</h2>
+      <h2 style="color:#1f2937; text-align:center; margin-bottom:24px;">Iniciar Sesión</h2>
 
       <div style="display:flex; flex-direction:column; gap:16px;">
+
+        <!-- Email -->
         <div style="display:flex; flex-direction:column; gap:6px;">
           <label style="color:#6b7280;">Correo electrónico</label>
           <input pInputText [(ngModel)]="email" placeholder="ejemplo@correo.com" style="width:100%;" />
         </div>
 
+        <!-- Contraseña -->
         <div style="display:flex; flex-direction:column; gap:6px;">
           <label style="color:#6b7280;">Contraseña</label>
           <input pInputText type="password" [(ngModel)]="password" placeholder="••••••••" style="width:100%;" />
         </div>
 
-        <p-button label="Entrar" severity="info" styleClass="w-full" />
+        <!-- Botón de login -->
+        <p-button 
+          label="Entrar" 
+          severity="info" 
+          styleClass="w-full" 
+          (onClick)="login()">
+        </p-button>
 
+        <!-- Mensaje de error -->
+        <p *ngIf="error" style="color:red; text-align:center; margin-top:8px;">
+          {{ error }}
+        </p>
+
+        <!-- Link a registro -->
         <p style="text-align:center; color:#6b7280;">
           ¿No tienes cuenta?
           <a [routerLink]="['/register']" style="color:#2563eb;">Regístrate aquí</a>
         </p>
 
+        <!-- Botón volver -->
         <p-button label="Volver" severity="secondary" [routerLink]="['/landing']" styleClass="w-full" />
+
       </div>
     </p-card>
   </div>
