@@ -1,0 +1,33 @@
+[33m094a39b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mpractica-4[m[33m, [m[1;31morigin/practica-3[m[33m, [m[1;32mpractica-3[m[33m)[m HEAD@{0}: checkout: moving from practica-3 to practica-4
+[33m094a39b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mpractica-4[m[33m, [m[1;31morigin/practica-3[m[33m, [m[1;32mpractica-3[m[33m)[m HEAD@{1}: reset: moving to origin/practica-3
+[33m094a39b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mpractica-4[m[33m, [m[1;31morigin/practica-3[m[33m, [m[1;32mpractica-3[m[33m)[m HEAD@{2}: checkout: moving from practica-3 to practica-3
+[33m094a39b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mpractica-4[m[33m, [m[1;31morigin/practica-3[m[33m, [m[1;32mpractica-3[m[33m)[m HEAD@{3}: checkout: moving from practica-4 to practica-3
+[33m094a39b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mpractica-4[m[33m, [m[1;31morigin/practica-3[m[33m, [m[1;32mpractica-3[m[33m)[m HEAD@{4}: checkout: moving from practica-3 to practica-4
+[33m094a39b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mpractica-4[m[33m, [m[1;31morigin/practica-3[m[33m, [m[1;32mpractica-3[m[33m)[m HEAD@{5}: checkout: moving from practica-2 to practica-3
+[33mf77f086[m[33m ([m[1;31morigin/practica-2[m[33m, [m[1;32mpractica-2[m[33m)[m HEAD@{6}: checkout: moving from practica-1 to practica-2
+[33mc987b4e[m[33m ([m[1;31morigin/practica-1[m[33m, [m[1;32mpractica-1[m[33m)[m HEAD@{7}: checkout: moving from practica-3 to practica-1
+[33m094a39b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mpractica-4[m[33m, [m[1;31morigin/practica-3[m[33m, [m[1;32mpractica-3[m[33m)[m HEAD@{8}: checkout: moving from practica-2 to practica-3
+[33mf77f086[m[33m ([m[1;31morigin/practica-2[m[33m, [m[1;32mpractica-2[m[33m)[m HEAD@{9}: checkout: moving from practica-1 to practica-2
+[33mc987b4e[m[33m ([m[1;31morigin/practica-1[m[33m, [m[1;32mpractica-1[m[33m)[m HEAD@{10}: checkout: moving from practica-3 to practica-1
+[33m094a39b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mpractica-4[m[33m, [m[1;31morigin/practica-3[m[33m, [m[1;32mpractica-3[m[33m)[m HEAD@{11}: checkout: moving from practica-1 to practica-3
+[33mc987b4e[m[33m ([m[1;31morigin/practica-1[m[33m, [m[1;32mpractica-1[m[33m)[m HEAD@{12}: checkout: moving from practica-2 to practica-1
+[33mf77f086[m[33m ([m[1;31morigin/practica-2[m[33m, [m[1;32mpractica-2[m[33m)[m HEAD@{13}: checkout: moving from practica-3 to practica-2
+[33m094a39b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mpractica-4[m[33m, [m[1;31morigin/practica-3[m[33m, [m[1;32mpractica-3[m[33m)[m HEAD@{14}: commit: Practica 3
+[33mf77f086[m[33m ([m[1;31morigin/practica-2[m[33m, [m[1;32mpractica-2[m[33m)[m HEAD@{15}: reset: moving to practica-2
+[33mc987b4e[m[33m ([m[1;31morigin/practica-1[m[33m, [m[1;32mpractica-1[m[33m)[m HEAD@{16}: checkout: moving from practica-1 to practica-3
+[33mc987b4e[m[33m ([m[1;31morigin/practica-1[m[33m, [m[1;32mpractica-1[m[33m)[m HEAD@{17}: checkout: moving from practica-2 to practica-1
+[33mf77f086[m[33m ([m[1;31morigin/practica-2[m[33m, [m[1;32mpractica-2[m[33m)[m HEAD@{18}: checkout: moving from practica-1 to practica-2
+[33mc987b4e[m[33m ([m[1;31morigin/practica-1[m[33m, [m[1;32mpractica-1[m[33m)[m HEAD@{19}: commit: Practica 1 - Boton Danger PrimeNG
+[33mf066811[m[33m ([m[1;31morigin/main[m[33m)[m HEAD@{20}: checkout: moving from practica-1 to practica-1
+[33mf066811[m[33m ([m[1;31morigin/main[m[33m)[m HEAD@{21}: checkout: moving from main to practica-1
+[33mfeeb6b1[m[33m ([m[1;32mmain[m[33m)[m HEAD@{22}: checkout: moving from practica-2 to main
+[33mf77f086[m[33m ([m[1;31morigin/practica-2[m[33m, [m[1;32mpractica-2[m[33m)[m HEAD@{23}: checkout: moving from main to practica-2
+[33mfeeb6b1[m[33m ([m[1;32mmain[m[33m)[m HEAD@{24}: commit: cambios angular.json
+[33mf066811[m[33m ([m[1;31morigin/main[m[33m)[m HEAD@{25}: checkout: moving from practica-2 to main
+[33mf77f086[m[33m ([m[1;31morigin/practica-2[m[33m, [m[1;32mpractica-2[m[33m)[m HEAD@{26}: commit: Practica 2 - Login, Register
+[33mf066811[m[33m ([m[1;31morigin/main[m[33m)[m HEAD@{27}: checkout: moving from main to practica-2
+[33mf066811[m[33m ([m[1;31morigin/main[m[33m)[m HEAD@{28}: checkout: moving from practica-2 to main
+[33mf066811[m[33m ([m[1;31morigin/main[m[33m)[m HEAD@{29}: checkout: moving from main to practica-2
+[33mf066811[m[33m ([m[1;31morigin/main[m[33m)[m HEAD@{30}: Branch: renamed refs/heads/master to refs/heads/main
+[33mf066811[m[33m ([m[1;31morigin/main[m[33m)[m HEAD@{32}: commit: Práctica 1
+[33ma8c51fb[m HEAD@{33}: commit (initial): initial commit
