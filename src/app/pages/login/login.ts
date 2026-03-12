@@ -6,13 +6,15 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
+import { Navbar } from '../../shared/components/navbar/navbar';
+import { Footer } from '../../shared/components/footer/footer';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ButtonModule, CardModule, InputTextModule, FormsModule, RouterLink, NgIf],
+  imports: [ButtonModule, CardModule, InputTextModule, FormsModule, RouterLink, NgIf,Navbar, Footer],
   templateUrl: './login.html'
-})
+}) 
 export class Login {
 
   email = '';

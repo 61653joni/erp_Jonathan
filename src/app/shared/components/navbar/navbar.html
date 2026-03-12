@@ -6,8 +6,8 @@
   </div>
 
   <div class="flex gap-2">
-    <button *ngIf="!router.url.includes('dashboard')"
-      class="p-button p-component p-button-outlined p-button-sm p-button-secondary" routerLink="/login">
+    <button *ngIf="router.url === '/landing'" class="p-button p-component p-button-outlined p-button-sm p-button-secondary"
+      routerLink="/login">
       <span class="p-button-label">Iniciar sesión</span>
     </button>
   </div>

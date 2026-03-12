@@ -5,6 +5,8 @@ import { NgIf } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
+import { Navbar } from '../../shared/components/navbar/navbar';
+import { Footer } from '../../shared/components/footer/footer';
 
 @Component({
   selector: 'app-register',
@@ -15,6 +17,8 @@ import { InputTextModule } from 'primeng/inputtext';
     CardModule,
     InputTextModule,
     RouterLink,
+    Navbar,
+    Footer,
     NgIf
   ],
   templateUrl: './register.html'

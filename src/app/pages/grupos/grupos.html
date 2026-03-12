@@ -1,6 +1,95 @@
-<div class="flex align-items-center justify-content-center h-screen">
-  <div class="surface-overlay border-1 border-100 border-round-xl p-6 text-center shadow-3">
-    <i class="pi pi-th-large text-primary" style="font-size: 3rem"></i>
-    <h1 class="text-4xl font-bold text-color mt-3">Grupos</h1>
+<div class="flex justify-content-center p-6">
+  <div class="w-full" style="max-width:1100px">
+
+    <div class="mb-5">
+      <h1 class="text-4xl font-bold text-color">Mis Grupos</h1>
+      <p class="text-color-secondary">Selecciona un grupo para entrar a su dashboard</p>
+    </div>
+
+    <div class="grid">
+
+      <!-- GRUPO -->
+      <div class="col-12 md:col-6 lg:col-4">
+        <div class="surface-card border-1 surface-border border-round-xl p-4 cursor-pointer hover:shadow-4 transition-duration-200">
+
+          <div class="flex align-items-center gap-3 mb-3">
+            <div class="flex align-items-center justify-content-center border-round bg-primary text-white"
+                 style="width:45px;height:45px">
+              <i class="pi pi-users text-xl"></i>
+            </div>
+
+            <div>
+              <div class="font-bold text-lg">Equipo Dev</div>
+              <div class="text-sm text-color-secondary">8 miembros</div>
+            </div>
+          </div>
+
+          <p class="text-sm text-color-secondary mb-4">
+            Desarrollo del sistema principal.
+          </p>
+
+          <button class="p-button p-button-sm w-full" routerLink="/dashboard/1">
+            Entrar
+          </button>
+
+        </div>
+      </div>
+
+      <!-- GRUPO -->
+      <div class="col-12 md:col-6 lg:col-4">
+        <div class="surface-card border-1 surface-border border-round-xl p-4 cursor-pointer hover:shadow-4 transition-duration-200">
+
+          <div class="flex align-items-center gap-3 mb-3">
+            <div class="flex align-items-center justify-content-center border-round bg-blue-500 text-white"
+                 style="width:45px;height:45px">
+              <i class="pi pi-briefcase text-xl"></i>
+            </div>
+
+            <div>
+              <div class="font-bold text-lg">Soporte</div>
+              <div class="text-sm text-color-secondary">5 miembros</div>
+            </div>
+          </div>
+
+          <p class="text-sm text-color-secondary mb-4">
+            Atención de incidencias y tickets.
+          </p>
+
+          <button class="p-button p-button-sm w-full" routerLink="/dashboard/2">
+            Entrar
+          </button>
+
+        </div>
+      </div>
+
+      <!-- GRUPO -->
+      <div class="col-12 md:col-6 lg:col-4">
+        <div class="surface-card border-1 surface-border border-round-xl p-4 cursor-pointer hover:shadow-4 transition-duration-200">
+
+          <div class="flex align-items-center gap-3 mb-3">
+            <div class="flex align-items-center justify-content-center border-round bg-green-500 text-white"
+                 style="width:45px;height:45px">
+              <i class="pi pi-palette text-xl"></i>
+            </div>
+
+            <div>
+              <div class="font-bold text-lg">UX</div>
+              <div class="text-sm text-color-secondary">4 miembros</div>
+            </div>
+          </div>
+
+          <p class="text-sm text-color-secondary mb-4">
+            Diseño de interfaz y experiencia.
+          </p>
+
+          <button class="p-button p-button-sm w-full" routerLink="/dashboard/3">
+            Entrar
+          </button>
+
+        </div>
+      </div>
+
+    </div>
+
   </div>
 </div>
