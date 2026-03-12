@@ -1,12 +1,18 @@
 import { Component } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
+import { RouterModule } from '@angular/router';
 import { CardModule } from 'primeng/card';
-import { RouterLink } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { Navbar } from '../../shared/components/navbar/navbar';
 
 @Component({
   selector: 'app-landing',
-  standalone: true,
-  imports: [ButtonModule, CardModule, RouterLink],
-  templateUrl: './landing.html'
+  imports: [
+    RouterModule,
+    CardModule,
+    ButtonModule,
+    Navbar
+  ],
+  templateUrl: './landing.html',
+  styleUrl: './landing.css'
 })
 export class Landing { }

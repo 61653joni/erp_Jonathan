@@ -29,8 +29,8 @@ export class Login {
 
     if (this.email === this.HARDCODE_EMAIL &&
         this.password === this.HARDCODE_PASSWORD) {
-      console.log('Login OK, navegando a /loading');
-      this.router.navigate(['/landing']);
+      console.log('Login OK, navegando a /dashboard');
+      this.router.navigate(['/dashboard']);
     } else {
       this.error = 'Credenciales incorrectas';
       console.log('Login fallido');

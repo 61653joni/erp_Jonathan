@@ -1,1 +1,62 @@
-<p>sidebar works!</p>
+<div class="h-screen w-16rem flex flex-column surface-card border-right-1 surface-border">
+
+  <!-- LOGO -->
+  <div class="px-4 py-4 flex align-items-center gap-3">
+    <div class="flex align-items-center justify-content-center border-round-lg bg-primary" style="width:38px;height:38px">
+      <i class="pi pi-building text-white text-lg"></i>
+    </div>
+    <span class="text-xl font-bold text-color">ERP<span class="text-primary">Isaías</span></span>
+  </div>
+
+  <hr class="mx-3 border-top-1 surface-border border-none mt-0 mb-2"/>
+
+  <!-- MENU -->
+  <nav class="flex flex-column gap-1 px-3 flex-1">
+
+    <span class="text-xs font-semibold text-color-secondary uppercase px-2 mb-1">Menú</span>
+
+    <a class="flex align-items-center gap-3 px-3 py-2 border-round-lg cursor-pointer text-color no-underline font-medium"
+       routerLink="/dashboard/usuarios"
+       onmouseover="this.classList.add('surface-hover')"
+       onmouseout="this.classList.remove('surface-hover')">
+      <div class="flex align-items-center justify-content-center border-round" style="width:30px;height:30px;background:var(--blue-900)">
+        <i class="pi pi-users text-blue-400 text-sm"></i>
+      </div>
+      <span>Usuarios</span>
+    </a>
+
+    <a class="flex align-items-center gap-3 px-3 py-2 border-round-lg cursor-pointer text-color no-underline font-medium"
+       routerLink="/dashboard/grupos"
+       onmouseover="this.classList.add('surface-hover')"
+       onmouseout="this.classList.remove('surface-hover')">
+      <div class="flex align-items-center justify-content-center border-round" style="width:30px;height:30px;background:var(--purple-900)">
+        <i class="pi pi-th-large text-purple-400 text-sm"></i>
+      </div>
+      <span>Grupos</span>
+    </a>
+
+  </nav>
+
+  <!-- USUARIO + CERRAR SESION -->
+  <div class="px-3 py-3 border-top-1 surface-border">
+
+    <div class="flex align-items-center gap-3 px-2 py-2 mb-1">
+      <div class="flex align-items-center justify-content-center border-round-circle bg-primary font-bold text-white text-sm" style="width:34px;height:34px">
+        JI
+      </div>
+      <div class="flex flex-column">
+        <span class="font-semibold text-color text-sm">Juan Isaías</span>
+        <span class="text-xs text-color-secondary">Administrador</span>
+      </div>
+    </div>
+
+    <a class="flex align-items-center gap-3 px-3 py-2 border-round-lg cursor-pointer text-red-400 no-underline font-medium"
+       onmouseover="this.style.background='var(--red-900)'"
+       onmouseout="this.style.background='transparent'">
+      <i class="pi pi-sign-out text-sm"></i>
+      <span>Cerrar sesión</span>
+    </a>
+
+  </div>
+
+</div>
