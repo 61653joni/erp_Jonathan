@@ -1,13 +1,19 @@
-<div style="min-height:100vh; display:flex; align-items:center; justify-content:center; background:#0f0f0f;">
-  <div style="width: 400px; text-align:center;">
-    <p-card>
-      <h1 style="color:#1f2937; margin-bottom:8px;"> Bienvenido</h1>
-      <p style="color:#6b7280; margin-bottom:24px;">Sistema ERP Isaías</p>
+<app-navbar />
 
-      <div style="display:flex; flex-direction:column; gap:12px;">
-        <p-button label="Iniciar Sesión" severity="info"    [routerLink]="['/login']"    styleClass="w-full" />
-        <p-button label="Registrarse"    severity="success" [routerLink]="['/register']" styleClass="w-full" />
-      </div>
-    </p-card>
+<div class="flex align-items-center justify-content-center" style="min-height: calc(100vh - 60px)">
+  <div class="text-center px-4">
+
+    <i class="pi pi-building text-primary" style="font-size: 4rem"></i>
+
+    <h1 class="text-5xl font-bold text-color mt-3 mb-2">
+      <span class="text-primary">Seguridad</span>
+    </h1>
+
+    <p class="text-secondary text-xl mb-5">
+      Sistema de gestión de tickets
+    </p>
+
+ 
+
   </div>
 </div>
