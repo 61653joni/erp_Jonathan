@@ -1,0 +1,40 @@
+<div class="flex justify-content-center p-4">
+
+    <p-card styleClass="w-full md:w-6 lg:w-4">
+
+        <ng-template pTemplate="header">
+            <div class="flex flex-column align-items-center gap-3 pt-4 pb-2">
+                <p-avatar [label]="email?.charAt(0)?.toUpperCase()" size="xlarge" shape="circle"
+                    styleClass="bg-purple-500 text-white text-3xl" />
+                <span class="text-2xl font-semibold text-900">Perfil</span>
+            </div>
+        </ng-template>
+
+        <div class="flex flex-column gap-3 pt-2">
+
+            <div class="flex flex-column gap-2">
+                <label>Nombre</label>
+                <input pInputText [(ngModel)]="nombre" />
+            </div>
+
+            <div class="flex flex-column gap-2">
+                <label>Email</label>
+                <input pInputText [(ngModel)]="email" />
+            </div>
+
+            <p-divider />
+
+            <div class="flex align-items-center gap-2">
+                <i class="pi pi-id-card text-teal-600"></i>
+                <span class="font-medium text-secondary">Rol:</span>
+                <p-tag [value]="role" severity="success" />
+            </div>
+
+            <button pButton label="Guardar cambios" icon="pi pi-save" class="mt-3" (click)="guardarPerfil()">
+            </button>
+
+        </div>
+
+    </p-card>
+
+</div>

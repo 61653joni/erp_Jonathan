@@ -5,6 +5,8 @@ import { Landing } from './pages/landing/landing';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { Usuarios } from './pages/usuarios/usuarios';
 import { Grupos } from './pages/grupos/grupos';
+import { Perfil } from './pages/perfil/perfil';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'landing', pathMatch: 'full' },
@@ -16,7 +18,8 @@ export const routes: Routes = [
     component: Dashboard,
     children: [
       { path: 'usuarios', component: Usuarios },
-      { path: 'grupos',   component: Grupos },
+      { path: 'grupos', component: Grupos },
+      { path: 'perfil', component: Perfil }
     ]
   },
 ];

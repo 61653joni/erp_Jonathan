@@ -1,6 +1,67 @@
 <div class="flex align-items-center justify-content-center h-screen">
-  <div class="surface-overlay border-1 border-100 border-round-xl p-6 text-center shadow-3">
-    <i class="pi pi-users text-primary" style="font-size: 3rem"></i>
-    <h1 class="text-4xl font-bold text-color mt-3">Usuarios</h1>
+  <div class="surface-overlay border-1 border-100 border-round-xl p-6 shadow-3 w-full md:w-10 lg:w-8">
+
+    <div class="text-center mb-4">
+      <i class="pi pi-users text-primary" style="font-size: 3rem"></i>
+      <h1 class="text-4xl font-bold text-color mt-3">Usuarios</h1>
+    </div>
+
+    <p-table [value]="users">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-user>
+        <tr>
+          <td>{{ user.nombre }}</td>
+          <td>{{ user.email }}</td>
+
+          <!-- ESTADO -->
+          <td class="flex align-items-center gap-2">
+
+            <p-toggleSwitch [(ngModel)]="user.estado" [trueValue]="'activo'" [falseValue]="'inactivo'"
+              (onChange)="guardar()">
+            </p-toggleSwitch>
+
+            <span [ngClass]="{
+    'text-green-500': user.estado === 'activo',
+    'text-red-500': user.estado === 'inactivo'
+  }">
+              {{ user.estado }}
+            </span>
+
+          </td>
+
+          <!-- ACCIONES -->
+          <td>
+            <div class="flex gap-2 align-items-center">
+
+              <!-- PERMISOS -->
+              <button class="p-button p-button-rounded p-button-info p-button-sm">
+                <i class="pi pi-lock"></i>
+              </button>
+              <!-- EDITAR -->
+              <button class="p-button p-button-rounded p-button-success p-button-sm">
+                <i class="pi pi-pencil"></i>
+              </button>
+              <!-- ELIMINAR -->
+              <button class="p-button p-button-rounded p-button-danger p-button-sm" (click)="eliminar(user)">
+                <i class="pi pi-trash"></i>
+              </button>
+
+
+
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+    </p-table>
   </div>
 </div>
