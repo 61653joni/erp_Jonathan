@@ -8,6 +8,25 @@ import { InputTextModule } from 'primeng/inputtext';
 import { Navbar } from '../../shared/components/navbar/navbar';
 import { Footer } from '../../shared/components/footer/footer';
 
+type Role = 'miembro' | 'admin' | 'super';
+
+interface Permisos {
+  grupos: {
+    crear: boolean;
+    editar: boolean;
+    eliminar: boolean;
+    ver: boolean;
+  };
+}
+
+interface User {
+  email: string;
+  password: string;
+  nombre: string;
+  role: Role;
+  permisos: Permisos;
+  estado: 'activo' | 'inactivo';
+}
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -34,7 +53,7 @@ export class Register {
   password = '';
   confirmar = '';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   // Validaciones
   esMayorDeEdad(): boolean {
@@ -64,21 +83,21 @@ export class Register {
 
   camposLlenos(): boolean {
     return this.usuario.trim() !== '' &&
-           this.nombre.trim() !== '' &&
-           this.email.trim() !== '' &&
-           this.direccion.trim() !== '' &&
-           this.telefono.trim() !== '' &&
-           this.fechaNacimiento !== '' &&
-           this.password.trim() !== '' &&
-           this.confirmar.trim() !== '';
+      this.nombre.trim() !== '' &&
+      this.email.trim() !== '' &&
+      this.direccion.trim() !== '' &&
+      this.telefono.trim() !== '' &&
+      this.fechaNacimiento !== '' &&
+      this.password.trim() !== '' &&
+      this.confirmar.trim() !== '';
   }
 
   formularioValido(): boolean {
     return this.camposLlenos() &&
-           this.telefonoValido() &&
-           this.esMayorDeEdad() &&
-           this.passwordValida() &&
-           this.password === this.confirmar;
+      this.telefonoValido() &&
+      this.esMayorDeEdad() &&
+      this.passwordValida() &&
+      this.password === this.confirmar;
   }
 
   // Mensajes de error por campo
@@ -100,8 +119,34 @@ export class Register {
   }
 
   registrar() {
-    if (this.formularioValido()) {
-      this.router.navigate(['/login']);
-    }
+  if (!this.formularioValido()) return;
+
+  const users: User[] = JSON.parse(localStorage.getItem('users') || '[]');
+
+  // ❌ evitar correos duplicados
+  const existe = users.some(u => u.email === this.email);
+  if (existe) {
+    alert('El correo ya está registrado');
+    return;
   }
+
+  // ✔ crear usuario nuevo
+  const nuevo: User = {
+    email: this.email,
+    password: this.password,
+    nombre: this.nombre,
+    role: 'miembro',
+    estado: 'activo',
+    permisos: {
+      grupos: { crear: false, editar: false, eliminar: false, ver: true }
+    }
+  };
+
+  // ✔ guardar
+  users.push(nuevo);
+  localStorage.setItem('users', JSON.stringify(users));
+
+  // ✔ redirigir
+  this.router.navigate(['/login']);
+}
 }

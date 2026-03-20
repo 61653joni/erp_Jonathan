@@ -24,6 +24,7 @@ interface User {
   password: string;
   nombre: string;
   role: Role;
+  estado: 'activo' | 'inactivo';
   permisos: Permisos;
 }
 
@@ -33,6 +34,7 @@ const USERS: User[] = [
     password: '123456',
     role: 'miembro',
     nombre: 'Miembro',
+    estado: 'activo',
     permisos: {
       grupos: { crear: false, editar: false, eliminar: false, ver: true }
     }
@@ -42,6 +44,7 @@ const USERS: User[] = [
     password: '123456',
     role: 'admin',
     nombre: 'Administrador',
+    estado: 'activo',
     permisos: {
       grupos: { crear: true, editar: true, eliminar: false, ver: true }
     }
@@ -51,6 +54,7 @@ const USERS: User[] = [
     password: '123456',
     role: 'super',
     nombre: 'Super Usuario',
+    estado: 'activo',
     permisos: {
       grupos: { crear: true, editar: true, eliminar: true, ver: true }
     }
@@ -78,14 +82,19 @@ export class Login implements OnInit {
   password = '';
   error = '';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   ngOnInit() {
-    const existing = JSON.parse(localStorage.getItem('users') || '[]');
+    const existing: User[] = JSON.parse(localStorage.getItem('users') || '[]');
 
-    // Inicializa o corrige estructura si no existen permisos
-    if (!existing.length || !existing[0].permisos) {
+    if (!existing.length) {
       localStorage.setItem('users', JSON.stringify(USERS));
+    } else {
+      const updated = existing.map(u => ({
+        ...u,
+        estado: u.estado || 'activo'
+      }));
+      localStorage.setItem('users', JSON.stringify(updated));
     }
   }
 
@@ -96,17 +105,23 @@ export class Login implements OnInit {
       u => u.email === this.email && u.password === this.password
     );
 
-    if (user) {
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      localStorage.setItem('role', user.role);
-      localStorage.setItem('permisos', JSON.stringify(user.permisos));
-      localStorage.setItem('email', user.email);
-      localStorage.setItem('nombre', user.nombre);
-
-      this.router.navigate(['/dashboard']);
-    } else {
+    if (!user) {
       this.error = 'Credenciales incorrectas';
+      return;
     }
+
+    if (user.estado === 'inactivo') {
+      this.error = 'Usuario desactivado';
+      return;
+    }
+
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    localStorage.setItem('role', user.role);
+    localStorage.setItem('permisos', JSON.stringify(user.permisos));
+    localStorage.setItem('email', user.email);
+    localStorage.setItem('nombre', user.nombre);
+
+    this.router.navigate(['/dashboard']);
   }
 
 }
