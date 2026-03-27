@@ -1,0 +1,352 @@
+<div class="grupo-container" *ngIf="grupo; else noGrupo">
+  
+  <!-- Header del grupo con botón de volver -->
+  <div class="back-button">
+    <button class="p-button p-button-text" routerLink="/dashboard/grupos">
+      <i class="pi pi-arrow-left"></i>
+      Volver a Grupos
+    </button>
+  </div>
+
+  <!-- Header del grupo -->
+  <div class="grupo-header">
+    <div class="flex align-items-center gap-3">
+      <div class="grupo-icon">
+        <i [class]="grupo.icono"></i>
+      </div>
+      <div>
+        <h1>{{ grupo.nombre }}</h1>
+        <p>{{ grupo.descripcion }}</p>
+        <div class="grupo-meta">
+          <span><i class="pi pi-users"></i> {{ grupo.miembros.length || 0 }} miembros</span>
+          <span><i class="pi pi-ticket"></i> {{ tickets.length || 0 }} tickets</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="header-actions">
+      <!-- Toggle entre Lista y Kanban - Solo visible si tiene permiso para ver tickets -->
+      <div class="view-toggle" *ngIf="tienePermiso('tickets', 'ver')">
+        <button class="toggle-btn" [class.active]="vistaActual === 'lista'" (click)="cambiarVista('lista')">
+          <i class="pi pi-list"></i>
+          Lista
+        </button>
+        <button class="toggle-btn" [class.active]="vistaActual === 'kanban'" (click)="cambiarVista('kanban')">
+          <i class="pi pi-chart-scatter"></i>
+          Kanban
+        </button>
+      </div>
+      
+      <!-- Botón Nuevo Ticket - Solo si tiene permiso para crear -->
+      <button *ngIf="tienePermiso('tickets', 'crear')" class="p-button p-button-success" (click)="abrirModalTicket()">
+        <i class="pi pi-plus"></i>
+        Nuevo Ticket
+      </button>
+    </div>
+  </div>
+
+  <!-- Mensaje si no tiene permisos para ver tickets -->
+  <div *ngIf="!tienePermiso('tickets', 'ver')" class="sin-permisos">
+    <i class="pi pi-lock" style="font-size: 3rem; color: #ef4444;"></i>
+    <h3>No tienes permisos para ver tickets</h3>
+    <p>Contacta al administrador para solicitar acceso</p>
+  </div>
+
+  <!-- VISTA DE LISTA -->
+  <div class="lista-section" *ngIf="vistaActual === 'lista' && tienePermiso('tickets', 'ver')">
+    <div class="lista-header">
+      <h2>Tickets</h2>
+      <div class="lista-filtros">
+        <select [(ngModel)]="filtroEstado" (change)="aplicarFiltros()" class="filtro-select">
+          <option value="todos">Todos los estados</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="En Proceso">En Proceso</option>
+          <option value="Revisión">Revisión</option>
+          <option value="Hecho">Hecho</option>
+          <option value="Bloqueado">Bloqueado</option>
+        </select>
+        <select [(ngModel)]="filtroPrioridad" (change)="aplicarFiltros()" class="filtro-select">
+          <option value="todas">Todas las prioridades</option>
+          <option value="Importante">Importante</option>
+          <option value="Dar Prioridad">Dar Prioridad</option>
+          <option value="Principal">Principal</option>
+          <option value="Derecho de Prioridad">Derecho de Prioridad</option>
+          <option value="Orden de Prioridad">Orden de Prioridad</option>
+        </select>
+      </div>
+    </div>
+    
+    <div *ngIf="ticketsFiltrados.length === 0" class="empty-tickets">
+      <i class="pi pi-inbox"></i>
+      <p>No hay tickets que coincidan con los filtros</p>
+    </div>
+    
+    <div *ngFor="let ticket of ticketsFiltrados" class="ticket-card-lista">
+      <div class="ticket-card-header">
+        <div class="ticket-titulo-info">
+          <strong class="ticket-titulo-lista">{{ ticket.titulo }}</strong>
+          <span class="prioridad-badge-lista" [ngClass]="getPrioridadClass(ticket.prioridad)">
+            {{ ticket.prioridad }}
+          </span>
+          <span class="estado-badge-lista" [ngClass]="'estado-' + ticket.estado.replace(' ', '-')">
+            {{ ticket.estado }}
+          </span>
+        </div>
+        <!-- Acciones de ticket - Solo si tiene permisos -->
+        <div class="ticket-actions-lista">
+          <button *ngIf="tienePermiso('tickets', 'editar')" class="action-btn" (click)="editarTicket(ticket)">
+            <i class="pi pi-pencil"></i>
+          </button>
+          <button *ngIf="tienePermiso('tickets', 'eliminar')" class="action-btn danger" (click)="eliminarTicket(ticket)">
+            <i class="pi pi-trash"></i>
+          </button>
+        </div>
+      </div>
+      
+      <p class="ticket-descripcion-lista">{{ ticket.descripcion }}</p>
+      
+      <div class="ticket-info-lista">
+        <div class="ticket-info-item">
+          <i class="pi pi-calendar"></i>
+          <span>Inicio: {{ ticket.fechaInicio | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="ticket-info-item" *ngIf="ticket.fechaFinalizacion">
+          <i class="pi pi-calendar-times"></i>
+          <span>Fin: {{ ticket.fechaFinalizacion | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="ticket-info-item">
+          <i class="pi pi-user"></i>
+          <span>Asignado: {{ ticket.asignadoA === 'Todos' ? 'Todos' : (ticket.asignadoA ? ticket.asignadoA.split('@')[0] : 'Sin asignar') }}</span>
+        </div>
+        <div class="ticket-info-item">
+          <i class="pi pi-pencil"></i>
+          <span>Creado: {{ ticket.creadoPor ? ticket.creadoPor.split('@')[0] : 'Sistema' }}</span>
+        </div>
+      </div>
+      
+      <!-- Cambiar estado - Solo si tiene permiso -->
+      <div class="ticket-estado-actions" *ngIf="tienePermiso('tickets', 'cambiarEstado')">
+        <label>Cambiar estado:</label>
+        <select [(ngModel)]="ticket.estado" (change)="actualizarEstadoTicket(ticket)" class="estado-select">
+          <option value="Pendiente">Pendiente</option>
+          <option value="En Proceso">En Proceso</option>
+          <option value="Revisión">Revisión</option>
+          <option value="Hecho">Hecho</option>
+          <option value="Bloqueado">Bloqueado</option>
+        </select>
+      </div>
+      
+      <!-- COMENTARIOS -->
+      <div style="margin-top: 1rem;">
+        <!-- Mostrar comentarios existentes -->
+        <div *ngFor="let comentario of ticket.comentarios" 
+             style="background: white; border-radius: 8px; padding: 0.5rem; margin-bottom: 0.5rem;">
+          <strong style="font-size: 0.75rem;">{{ comentario.usuario }}</strong>
+          <p style="margin: 0.25rem 0 0; font-size: 0.875rem;">{{ comentario.texto }}</p>
+          <span style="font-size: 0.625rem; color: #94a3b8;">{{ comentario.fecha | date:'short' }}</span>
+        </div>
+        
+        <!-- Input para nuevo comentario -->
+        <div *ngIf="tienePermiso('tickets', 'comentar')" style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+          <input #comentarioInput type="text" placeholder="Agregar comentario..." 
+                 style="flex: 1; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 8px;">
+          <button (click)="agregarComentario(ticket, comentarioInput.value); comentarioInput.value = ''" 
+                  style="background: #3B82F6; border: none; padding: 0.5rem 1rem; border-radius: 8px; color: white; cursor: pointer;">
+            Comentar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA KANBAN -->
+  <div class="kanban-container" *ngIf="vistaActual === 'kanban' && tienePermiso('tickets', 'ver')">
+    <div class="kanban-column" 
+         *ngFor="let columna of columnasKanban; let i = index" 
+         cdkDropList 
+         [id]="'cdk-drop-list-' + i"
+         [cdkDropListData]="obtenerTicketsPorEstado(columna.estado)"
+         [cdkDropListConnectedTo]="columnasKanbanConectadas"
+         (cdkDropListDropped)="drop($event)">
+      
+      <div class="kanban-header" [ngClass]="getEstadoClass(columna.estado)">
+        <div class="kanban-titulo">
+          <span class="estado-indicador"></span>
+          <h3>{{ columna.titulo }}</h3>
+        </div>
+        <span class="kanban-count">{{ obtenerTicketsPorEstado(columna.estado).length }}</span>
+      </div>
+      
+      <div class="kanban-body">
+        <div class="kanban-card" 
+             *ngFor="let ticket of obtenerTicketsPorEstado(columna.estado)" 
+             cdkDrag>
+          
+          <div class="kanban-card-header">
+            <div class="kanban-card-titulo">
+              <strong>{{ ticket.titulo }}</strong>
+              <span class="prioridad-badge-small" [ngClass]="getPrioridadClass(ticket.prioridad)">
+                {{ ticket.prioridad }}
+              </span>
+            </div>
+            <!-- Acciones en Kanban - Solo si tiene permisos -->
+            <div class="kanban-card-actions">
+              <button *ngIf="tienePermiso('tickets', 'editar')" class="kanban-btn" (click)="editarTicket(ticket)">
+                <i class="pi pi-pencil"></i>
+              </button>
+              <button *ngIf="tienePermiso('tickets', 'eliminar')" class="kanban-btn" (click)="eliminarTicket(ticket)">
+                <i class="pi pi-trash"></i>
+              </button>
+            </div>
+          </div>
+          
+          <p class="kanban-card-descripcion">{{ ticket.descripcion | slice:0:80 }}{{ (ticket.descripcion?.length || 0) > 80 ? '...' : '' }}</p>
+          
+          <div class="kanban-card-footer">
+            <div class="kanban-card-asignado">
+              <i class="pi pi-user"></i>
+              <span>{{ ticket.asignadoA === 'Todos' ? 'Todos' : (ticket.asignadoA ? ticket.asignadoA.split('@')[0] : 'Sin asignar') }}</span>
+            </div>
+            <div class="kanban-card-fecha">
+              <i class="pi pi-calendar"></i>
+              <span>{{ ticket.fechaInicio | date:'dd/MM' }}</span>
+            </div>
+          </div>
+          
+          <div class="kanban-card-creador">
+            <i class="pi pi-pencil"></i>
+            <small>{{ ticket.creadoPor ? ticket.creadoPor.split('@')[0] : 'Sistema' }}</small>
+          </div>
+          
+          <!-- COMENTARIOS EN KANBAN -->
+          <div style="margin-top: 0.75rem; border-top: 1px solid #e2e8f0; padding-top: 0.5rem;">
+            <!-- Mostrar último comentario -->
+            <div *ngFor="let comentario of ticket.comentarios | slice:0:1" 
+                 style="background: #f1f5f9; border-radius: 6px; padding: 0.25rem 0.5rem; margin-bottom: 0.25rem;">
+              <small><strong>{{ comentario.usuario.split('@')[0] }}</strong>: {{ comentario.texto }}</small>
+            </div>
+            
+            <!-- Input para nuevo comentario -->
+            <div *ngIf="tienePermiso('tickets', 'comentar')" style="display: flex; gap: 0.25rem; margin-top: 0.5rem;">
+              <input #comentarioInputKanban type="text" placeholder="Comentar..." 
+                     style="flex: 1; padding: 0.25rem; font-size: 0.75rem; border: 1px solid #cbd5e1; border-radius: 4px;">
+              <button (click)="agregarComentario(ticket, comentarioInputKanban.value); comentarioInputKanban.value = ''" 
+                      style="background: #3B82F6; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; color: white; cursor: pointer; font-size: 0.7rem;">
+                ↓
+              </button>
+            </div>
+          </div>
+          
+        </div>
+        
+        <div *ngIf="obtenerTicketsPorEstado(columna.estado).length === 0" class="kanban-empty">
+          <i class="pi pi-inbox"></i>
+          <p>No hay tickets</p>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+</div>
+
+<ng-template #noGrupo>
+  <div class="error-container">
+    <i class="pi pi-exclamation-triangle"></i>
+    <h2>Grupo no encontrado</h2>
+    <button class="p-button p-button-link" routerLink="/dashboard/grupos">Volver a grupos</button>
+  </div>
+</ng-template>
+
+<!-- MODAL PARA CREAR/EDITAR TICKET -->
+<p-dialog 
+  [(visible)]="displayTicketModal" 
+  [modal]="true" 
+  [style]="{width: '550px', maxWidth: '90vw'}"
+  [header]="modoTicket === 'crear' ? 'Crear Nuevo Ticket' : 'Editar Ticket'"
+  [closable]="true"
+  [dismissableMask]="true">
+  
+  <div class="ticket-modal-content" *ngIf="grupo">
+    
+    <div class="campo-form">
+      <label class="campo-label">Título *</label>
+      <input type="text" pInputText [(ngModel)]="ticketForm.titulo" class="w-full" placeholder="Ingrese el título del ticket">
+    </div>
+
+    <div class="campo-form">
+      <label class="campo-label">Descripción</label>
+      <textarea [(ngModel)]="ticketForm.descripcion" rows="3" class="w-full" placeholder="Ingrese la descripción del ticket"></textarea>
+    </div>
+
+    <div class="grid-form">
+      <div class="campo-form">
+        <label class="campo-label">Estado *</label>
+        <select [(ngModel)]="ticketForm.estado" class="w-full">
+          <option value="Pendiente">Pendiente</option>
+          <option value="En Proceso">En Proceso</option>
+          <option value="Revisión">Revisión</option>
+          <option value="Hecho">Hecho</option>
+          <option value="Bloqueado">Bloqueado</option>
+        </select>
+      </div>
+
+      <div class="campo-form">
+        <label class="campo-label">Prioridad *</label>
+        <select [(ngModel)]="ticketForm.prioridad" class="w-full">
+          <option value="Importante">Importante</option>
+          <option value="Dar Prioridad">Dar Prioridad</option>
+          <option value="Principal">Principal</option>
+          <option value="Derecho de Prioridad">Derecho de Prioridad</option>
+          <option value="Orden de Prioridad">Orden de Prioridad</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid-form">
+      <div class="campo-form">
+        <label class="campo-label">Fecha Inicio *</label>
+        <input type="date" pInputText [(ngModel)]="ticketForm.fechaInicio" class="w-full">
+      </div>
+
+      <div class="campo-form">
+        <label class="campo-label">Fecha Finalización (Opcional)</label>
+        <input type="date" pInputText [(ngModel)]="ticketForm.fechaFinalizacion" class="w-full">
+      </div>
+    </div>
+
+    <div class="campo-form">
+      <label class="campo-label">Asignar a *</label>
+      <select [(ngModel)]="ticketForm.asignadoA" class="w-full">
+        <option value="Todos">Todos los miembros</option>
+        <option *ngFor="let miembro of grupo.miembros" [value]="miembro">{{ miembro }}</option>
+      </select>
+    </div>
+
+    <div class="campo-form">
+      <label class="campo-label">Creado por</label>
+      <input type="text" pInputText [value]="currentUserEmail" class="w-full" disabled>
+    </div>
+
+    <div class="modal-buttons">
+      <button class="p-button p-button-success" (click)="guardarTicket()">
+        <i class="pi pi-check"></i>
+        {{ modoTicket === 'crear' ? 'Crear Ticket' : 'Actualizar Ticket' }}
+      </button>
+      <button class="p-button p-button-secondary" (click)="cerrarModalTicket()">
+        <i class="pi pi-times"></i>
+        Cancelar
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Mensaje de error si no hay grupo -->
+  <div *ngIf="!grupo" class="ticket-modal-content" style="text-align: center; padding: 2rem;">
+    <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #ef4444;"></i>
+    <h3>Error: Grupo no encontrado</h3>
+    <p>No se puede crear un ticket porque el grupo no existe.</p>
+    <button class="p-button p-button-secondary" (click)="cerrarModalTicket()">Cerrar</button>
+  </div>
+
+</p-dialog>

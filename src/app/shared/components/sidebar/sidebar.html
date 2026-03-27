@@ -20,8 +20,8 @@
       Menú
     </span>
 
-    <!-- SOLO ADMIN Y SUPER -->
-    <a *ngIf="role === 'admin' || role === 'super'"
+    <!-- USUARIOS - Solo si tiene permiso para ver usuarios o es admin/super -->
+    <a *ngIf="role === 'super' || tienePermiso('usuarios', 'ver')"
       class="flex align-items-center gap-3 px-3 py-2 border-round-lg cursor-pointer text-color no-underline font-medium"
       routerLink="/dashboard/usuarios">
 
@@ -33,9 +33,9 @@
       <span>Usuarios</span>
     </a>
 
-    <!-- TODOS -->
-
-    <a class="flex align-items-center gap-3 px-3 py-2 border-round-lg cursor-pointer text-color no-underline font-medium"
+    <!-- GRUPOS - Solo si tiene permiso para ver grupos -->
+    <a *ngIf="tienePermiso('grupos', 'ver')"
+      class="flex align-items-center gap-3 px-3 py-2 border-round-lg cursor-pointer text-color no-underline font-medium"
       routerLink="/dashboard/grupos">
 
       <div class="flex align-items-center justify-content-center border-round"
@@ -46,9 +46,7 @@
       <span>Grupos</span>
     </a>
 
-
-    <!--Perfil todos-->
-
+    <!-- PERFIL - Siempre visible para todos los usuarios -->
     <a class="flex align-items-center gap-3 px-3 py-2 border-round-lg cursor-pointer text-color no-underline font-medium"
       routerLink="/dashboard/perfil">
 
@@ -59,6 +57,14 @@
 
       <span>Perfil</span>
     </a>
+    
+    <!-- Mensaje cuando no hay menús disponibles -->
+    <div *ngIf="!tienePermiso('grupos', 'ver') && !tienePermiso('usuarios', 'ver') && role !== 'super'" 
+         class="text-center mt-4 p-3 text-color-secondary">
+      <i class="pi pi-info-circle" style="font-size: 1.5rem;"></i>
+      <p class="text-sm mt-2">No tienes acceso a módulos adicionales</p>
+    </div>
+
   </nav>
 
   <!-- USUARIO -->
@@ -84,13 +90,11 @@
     </div>
 
     <!-- CERRAR SESION -->
-   <a class="flex align-items-center gap-3 px-3 py-2 border-round-lg cursor-pointer text-red-400 no-underline font-medium"
-   (click)="logout()">
-
-  <i class="pi pi-sign-out text-sm"></i>
-  <span>Cerrar sesión</span>
-
-</a>
+    <a class="flex align-items-center gap-3 px-3 py-2 border-round-lg cursor-pointer text-red-400 no-underline font-medium"
+      (click)="logout()">
+      <i class="pi pi-sign-out text-sm"></i>
+      <span>Cerrar sesión</span>
+    </a>
 
   </div>
 

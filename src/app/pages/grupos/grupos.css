@@ -1,0 +1,233 @@
+/* Fondo del modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Contenedor del modal */
+.modal {
+  background-color: #fff;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  animation: fadeIn 0.3s ease;
+}
+
+/* Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.modal-header .close {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Inputs */
+.full-width {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Botón */
+.btn-success {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+/* Animación */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+/* Selector de iconos */
+.icon-selector {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem;
+  background: #f9fafb;
+}
+
+.icon-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.icon-preview i {
+  font-size: 1.5rem;
+  color: #10B981;
+}
+
+.icon-preview span {
+  font-size: 0.875rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+.icon-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  background: white;
+}
+
+.icon-option:hover {
+  background: #f3f4f6;
+  transform: translateY(-2px);
+  border-color: #d1d5db;
+}
+
+.icon-option.selected {
+  background: #10B981;
+  border-color: #10B981;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+.icon-option.selected i {
+  color: white;
+}
+
+.icon-option.selected span {
+  color: white;
+}
+
+.icon-option i {
+  font-size: 1.25rem;
+  color: #6b7280;
+  transition: color 0.2s;
+}
+
+.icon-option span {
+  font-size: 0.65rem;
+  text-align: center;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Scrollbar personalizada */
+.icon-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.icon-grid::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.icon-grid::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+.icon-grid::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .icon-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .icon-option span {
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .icon-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Estilos para el select de usuarios */
+.select-usuario {
+  width: 100%;
+  padding: 0.625rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  font-size: 0.875rem;
+  color: #1f2937;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.select-usuario:hover {
+  border-color: #10B981;
+}
+
+.select-usuario:focus {
+  outline: none;
+  border-color: #10B981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1);
+}
+
+.select-usuario option {
+  padding: 0.5rem;
+  background-color: white;
+  color: #1f2937;
+}
+
+.select-usuario option:disabled {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.select-usuario option:checked {
+  background-color: #10B981;
+  color: white;
+}
+
+/* Si quieres que el select tenga un placeholder visible */
+.select-usuario:invalid {
+  color: #9ca3af;
+}

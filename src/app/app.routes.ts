@@ -6,6 +6,7 @@ import { Dashboard } from './pages/dashboard/dashboard';
 import { Usuarios } from './pages/usuarios/usuarios';
 import { Grupos } from './pages/grupos/grupos';
 import { Perfil } from './pages/perfil/perfil';
+import { GrupoComponent } from './pages/grupo/grupo';
 
 
 export const routes: Routes = [
@@ -19,7 +20,9 @@ export const routes: Routes = [
     children: [
       { path: 'usuarios', component: Usuarios },
       { path: 'grupos', component: Grupos },
-      { path: 'perfil', component: Perfil }
+      { path: 'perfil', component: Perfil },
+      { path: 'grupo/:id', component: GrupoComponent },
+
     ]
   },
 ];

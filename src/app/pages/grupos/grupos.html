@@ -1,173 +1,244 @@
-<div class="flex justify-content-center p-6">
-  <div class="w-full" style="max-width:1100px">
+<!-- grupos.html -->
+<div class="p-6">
+  <div
+    style="max-width: 1200px; margin: 0 auto; background: white; border-radius: 24px; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
 
-    <!-- HEADER -->
-    <div class="flex justify-content-between align-items-center mb-4">
-      <div>
-        <h1 class="text-4xl font-bold text-color">Mis Grupos</h1>
-        <p class="text-color-secondary">Selecciona un grupo</p>
-      </div>
+    <div class="text-center mb-4">
+      <i class="pi pi-users" style="font-size: 3rem; color: #10B981;"></i>
+      <h1 style="font-size: 2rem; margin: 1rem 0 0.5rem; color: #1e293b;">Grupos</h1>
+      <p style="color: #64748b;">Gestiona los grupos y sus miembros</p>
+    </div>
 
-      <button 
-        *ngIf="currentRole === 'super'"
-        class="p-button p-button-sm p-button-success"
-        (click)="abrirCrearGrupo()">
-        <i class="pi pi-plus"></i>
-        Nuevo Grupo
+    <!-- Botón Crear Grupo (solo si tiene permiso) -->
+    <div *ngIf="tienePermiso('grupos', 'crear')" style="margin-bottom: 1rem; text-align: right;">
+      <button (click)="abrirCrearGrupo()"
+        style="background: #10B981; border: none; padding: 0.75rem 1.5rem; border-radius: 12px; color: white; cursor: pointer; font-weight: 500;">
+        + Nuevo Grupo
       </button>
     </div>
 
-    <!-- GRID -->
-    <div class="grid">
-
-      <div class="col-12 md:col-6 lg:col-4" *ngFor="let grupo of grupos">
-
-        <div class="surface-card border-1 surface-border border-round-xl p-4 hover:shadow-4 transition-duration-200">
-
-          <!-- ICONO -->
-          <div class="flex align-items-center gap-3 mb-3">
-            <div class="flex align-items-center justify-content-center border-round bg-primary text-white"
-                 style="width:45px;height:45px">
-              <i [class]="grupo.icono + ' text-xl'"></i>
-            </div>
-
+    <!-- Grid de Grupos -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
+      <div *ngFor="let grupo of grupos"
+        style="background: #f8fafc; border-radius: 16px; padding: 1.5rem; border: 1px solid #e2e8f0; transition: all 0.3s;">
+        <div style="display: flex; justify-content: space-between; align-items: start;">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <i [class]="grupo.icono" style="font-size: 2rem; color: #3B82F6;"></i>
             <div>
-              <div class="font-bold text-white">{{ grupo.nombre }}</div>
-              <div class="text-sm text-color-secondary">
-                {{ grupo.miembros.length }} miembros
-              </div>
+              <h3 style="margin: 0; color: #1e293b; font-size: 1.25rem;">{{ grupo.nombre }}</h3>
+              <p style="margin: 0.25rem 0 0; color: #64748b; font-size: 0.875rem;">{{ grupo.descripcion }}</p>
             </div>
           </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button *ngIf="tienePermiso('grupos', 'editar')" (click)="abrirEditarGrupo(grupo)"
+              style="background: #10B981; border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; color: white;">✏️</button>
+            <button *ngIf="tienePermiso('grupos', 'eliminar')" (click)="eliminarGrupo(grupo)"
+              style="background: #EF4444; border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; color: white;">🗑️</button>
+          </div>
+        </div>
 
-          <!-- DESCRIPCIÓN -->
-          <p class="text-sm text-color-secondary mb-4">
-            {{ grupo.descripcion }}
-          </p>
-
-          <!-- ACCIONES -->
-          <div class="flex justify-content-between align-items-center">
-
-            <button class="p-button p-button-sm p-button-outlined"
-                    [routerLink]="['/dashboard', grupo.id]">
-              Entrar
+        <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <i class="pi pi-users" style="color: #64748b;"></i>
+            <span style="color: #475569;">{{ grupo.miembros.length }} miembros</span>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button *ngIf="tienePermiso('grupos', 'agregarMiembros')" (click)="abrirAgregarMiembro(grupo)"
+              style="background: #3B82F6; border: none; padding: 0.5rem 1rem; border-radius: 8px; color: white; cursor: pointer; font-size: 0.875rem;">
+              + Miembro
             </button>
-
-            <div class="flex gap-2">
-
-              <button class="p-button p-button-rounded p-button-sm"
-                      (click)="verGrupo(grupo)">
-                <i class="pi pi-eye"></i>
-              </button>
-
-              <button *ngIf="currentRole === 'super'"
-                      class="p-button p-button-rounded p-button-success p-button-sm"
-                      (click)="editarGrupo(grupo)">
-                <i class="pi pi-pencil"></i>
-              </button>
-
-              <button *ngIf="currentRole === 'super'"
-                      class="p-button p-button-rounded p-button-info p-button-sm"
-                      (click)="agregarMiembro(grupo)">
-                <i class="pi pi-user-plus"></i>
-              </button>
-
-            </div>
-
+            <button *ngIf="tienePermiso('tickets', 'ver')" (click)="irAlGrupo(grupo.id)"
+              style="background: #8B5CF6; border: none; padding: 0.5rem 1rem; border-radius: 8px; color: white; cursor: pointer; font-size: 0.875rem;">
+              Ver Tickets
+            </button>
           </div>
-
         </div>
       </div>
-
     </div>
 
+    <div *ngIf="grupos.length === 0" style="text-align: center; padding: 3rem; color: #64748b;">
+      No hay grupos disponibles
+    </div>
   </div>
 </div>
 
-<!-- MODAL -->
-<p-dialog 
-  [(visible)]="displayModal"
-  [modal]="true"
-  [style]="{width: '420px'}"
-  [contentStyle]="{'padding':'0'}">
-
-  <div *ngIf="grupoSeleccionado" class="p-4">
-
-    <div class="flex align-items-center gap-3 mb-4">
-      <div class="flex align-items-center justify-content-center border-round-xl bg-primary text-white"
-           style="width:55px;height:55px">
-        <i [class]="grupoSeleccionado.icono + ' text-2xl'"></i>
+<!-- Modal Crear Grupo -->
+<div *ngIf="displayCrearGrupo" class="modal-overlay" (click)="displayCrearGrupo = false">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Crear Nuevo Grupo</h2>
+      <button class="close-btn" (click)="displayCrearGrupo = false">×</button>
+    </div>
+    <div class="modal-body">
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem;">Nombre del grupo *</label>
+          <input type="text" [(ngModel)]="nuevoGrupo.nombre"
+            style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px;">
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem;">Descripción</label>
+          <textarea [(ngModel)]="nuevoGrupo.descripcion" rows="3"
+            style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px;"></textarea>
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem;">Icono</label>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;">
+            <div *ngFor="let icono of iconosDisponibles" (click)="nuevoGrupo.icono = icono.valor"
+              style="padding: 0.5rem; text-align: center; cursor: pointer; border-radius: 8px; border: 2px solid"
+              [style.border-color]="nuevoGrupo.icono === icono.valor ? '#10B981' : '#e2e8f0'">
+              <i [class]="icono.valor" style="font-size: 1.5rem;"></i>
+              <p style="margin: 0.25rem 0 0; font-size: 0.75rem;">{{ icono.nombre }}</p>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancelar" (click)="displayCrearGrupo = false">Cancelar</button>
+      <button class="btn-guardar" (click)="guardarGrupo()">Crear Grupo</button>
+    </div>
+  </div>
+</div>
 
+<!-- Modal Editar Grupo -->
+<div *ngIf="displayEditarGrupo" class="modal-overlay" (click)="cerrarEditarGrupo()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Editar Grupo</h2>
+      <button class="close-btn" (click)="cerrarEditarGrupo()">×</button>
+    </div>
+    <div class="modal-body" *ngIf="grupoEditando">
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem;">Nombre del grupo *</label>
+          <input type="text" [(ngModel)]="grupoEditando.nombre"
+            style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px;">
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem;">Descripción</label>
+          <textarea [(ngModel)]="grupoEditando.descripcion" rows="3"
+            style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px;"></textarea>
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem;">Icono</label>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;">
+            <div *ngFor="let icono of iconosDisponibles" (click)="grupoEditando.icono = icono.valor"
+              style="padding: 0.5rem; text-align: center; cursor: pointer; border-radius: 8px; border: 2px solid"
+              [style.border-color]="grupoEditando.icono === icono.valor ? '#10B981' : '#e2e8f0'">
+              <i [class]="icono.valor" style="font-size: 1.5rem;"></i>
+              <p style="margin: 0.25rem 0 0; font-size: 0.75rem;">{{ icono.nombre }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancelar" (click)="cerrarEditarGrupo()">Cancelar</button>
+      <button class="btn-guardar" (click)="guardarEditarGrupo()">Guardar Cambios</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Agregar Miembro -->
+<div *ngIf="displayAgregarMiembro" class="modal-overlay" (click)="cerrarAgregarMiembro()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Agregar Miembro</h2>
+      <button class="close-btn" (click)="cerrarAgregarMiembro()">×</button>
+    </div>
+    <div class="modal-body">
       <div>
-        <div class="text-xl font-bold text-900">
-          {{ grupoSeleccionado.nombre }}
-        </div>
-        <div class="text-sm text-color-secondary">
-          {{ grupoSeleccionado.miembros.length }} miembros
-        </div>
+        <label style="display: block; margin-bottom: 0.5rem;">Selecciona un usuario</label>
+        <select [(ngModel)]="miembroSeleccionadoEmail"
+          style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px;">
+          <option value="">Seleccionar...</option>
+          <option *ngFor="let usuario of usuariosDisponibles" [value]="usuario.email">
+            {{ usuario.nombre || usuario.email }} ({{ usuario.email }})
+          </option>
+        </select>
       </div>
     </div>
-
-    <div class="mb-4 p-3 surface-100 border-round-lg text-sm">
-      {{ grupoSeleccionado.descripcion }}
+    <div class="modal-footer">
+      <button class="btn-cancelar" (click)="cerrarAgregarMiembro()">Cancelar</button>
+      <button class="btn-guardar" (click)="guardarAgregarMiembro()">Agregar</button>
     </div>
-
-    <div class="font-semibold mb-2">Miembros</div>
-
-    <div *ngIf="grupoSeleccionado.miembros.length; else vacio"
-         class="flex flex-wrap gap-2">
-
-      <span *ngFor="let m of grupoSeleccionado.miembros"
-            class="px-3 py-1 border-round-full text-xs bg-primary-100">
-        {{ m }}
-      </span>
-
-    </div>
-
-    <ng-template #vacio>
-      <div class="text-sm text-color-secondary">
-        Sin miembros
-      </div>
-    </ng-template>
-
   </div>
+</div>
 
-</p-dialog>
+<style>
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
 
-<!-- MODAL Para agregar grupo-->
-<p-dialog 
-  header="Nuevo Grupo"
-  [(visible)]="displayCrearGrupo"
-  [modal]="true"
-  [style]="{width: '400px'}">
+  .modal-container {
+    background: white;
+    border-radius: 16px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  }
 
-  <div class="flex flex-column gap-3">
+  .modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-    <!-- NOMBRE -->
-    <div>
-      <label class="block mb-1 font-semibold">Nombre</label>
-      <input type="text" pInputText [(ngModel)]="nuevoGrupo.nombre" class="w-full">
-    </div>
+  .modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #1e293b;
+  }
 
-    <!-- DESCRIPCIÓN -->
-    <div>
-      <label class="block mb-1 font-semibold">Descripción</label>
-      <input type="text" pInputText [(ngModel)]="nuevoGrupo.descripcion" class="w-full">
-    </div>
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #64748b;
+  }
 
-    <!-- ICONO -->
-    <div>
-      <label class="block mb-1 font-semibold">Icono</label>
-      <input type="text" pInputText [(ngModel)]="nuevoGrupo.icono" class="w-full"
-             placeholder="Ej: pi pi-users">
-    </div>
+  .modal-body {
+    padding: 1.5rem;
+  }
 
-    <!-- BOTÓN -->
-    <button class="p-button p-button-success w-full"
-            (click)="guardarGrupo()">
-      Crear Grupo
-    </button>
+  .modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
 
-  </div>
+  .btn-cancelar {
+    background: #f1f5f9;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #475569;
+  }
 
-</p-dialog>
+  .btn-guardar {
+    background: #10B981;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+  }
+</style>

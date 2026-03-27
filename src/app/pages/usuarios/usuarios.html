@@ -1,67 +1,436 @@
-<div class="flex align-items-center justify-content-center h-screen">
-  <div class="surface-overlay border-1 border-100 border-round-xl p-6 shadow-3 w-full md:w-10 lg:w-8">
+<div class="p-6">
+  <div style="max-width: 1200px; margin: 0 auto; background: white; border-radius: 24px; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
 
     <div class="text-center mb-4">
-      <i class="pi pi-users text-primary" style="font-size: 3rem"></i>
-      <h1 class="text-4xl font-bold text-color mt-3">Usuarios</h1>
+      <i class="pi pi-users" style="font-size: 3rem; color: #10B981;"></i>
+      <h1 style="font-size: 2rem; margin: 1rem 0 0.5rem; color: #1e293b;">Usuarios</h1>
+      <p style="color: #64748b;">Gestiona los usuarios y sus permisos</p>
     </div>
 
-    <p-table [value]="users">
+    <!-- Mensaje si no tiene permisos para ver usuarios -->
+    <div *ngIf="!tienePermiso('usuarios', 'ver') && currentRole !== 'super'" class="text-center p-4">
+      <i class="pi pi-lock" style="font-size: 3rem; color: #ef4444;"></i>
+      <h3>No tienes permisos para ver usuarios</h3>
+      <p>Contacta al administrador para solicitar acceso</p>
+    </div>
 
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Nombre</th>
-          <th>Email</th>
-          <th>Estado</th>
-          <th>Acciones</th>
+    <!-- Tabla de usuarios - Solo visible si tiene permisos -->
+    <table *ngIf="tienePermiso('usuarios', 'ver') || currentRole === 'super'" style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
+          <th style="padding: 1rem; text-align: left; color: #475569;">Nombre</th>
+          <th style="padding: 1rem; text-align: left; color: #475569;">Email</th>
+          <th style="padding: 1rem; text-align: left; color: #475569;">Estado</th>
+          <th style="padding: 1rem; text-align: left; color: #475569;">Acciones</th>
         </tr>
-      </ng-template>
-
-      <ng-template pTemplate="body" let-user>
-        <tr>
-          <td>{{ user.nombre }}</td>
-          <td>{{ user.email }}</td>
-
-          <!-- ESTADO -->
-          <td class="flex align-items-center gap-2">
-
-            <p-toggleSwitch [(ngModel)]="user.estado" [trueValue]="'activo'" [falseValue]="'inactivo'"
-              (onChange)="guardar()">
-            </p-toggleSwitch>
-
-            <span [ngClass]="{
-    'text-green-500': user.estado === 'activo',
-    'text-red-500': user.estado === 'inactivo'
-  }">
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users" style="border-bottom: 1px solid #f1f5f9; transition: background 0.2s;" onmouseover="this.style.background='#fafcff'" onmouseout="this.style.background='transparent'">
+          <td style="padding: 1rem; font-weight: 500; color: #1e293b;">{{ user.nombre }}</td>
+          <td style="padding: 1rem; color: #475569;">{{ user.email }}</td>
+          <td style="padding: 1rem;">
+            <button (click)="toggleEstado(user)" 
+              [style.background]="user.estado === 'activo' ? '#10B981' : '#EF4444'"
+              style="padding: 0.25rem 1rem; border: none; border-radius: 20px; color: white; cursor: pointer; font-size: 0.8rem; font-weight: 500;">
               {{ user.estado }}
-            </span>
-
+            </button>
           </td>
-
-          <!-- ACCIONES -->
-          <td>
-            <div class="flex gap-2 align-items-center">
-
-              <!-- PERMISOS -->
-              <button class="p-button p-button-rounded p-button-info p-button-sm">
-                <i class="pi pi-lock"></i>
-              </button>
-              <!-- EDITAR -->
-              <button class="p-button p-button-rounded p-button-success p-button-sm">
-                <i class="pi pi-pencil"></i>
-              </button>
-              <!-- ELIMINAR -->
-              <button class="p-button p-button-rounded p-button-danger p-button-sm" (click)="eliminar(user)">
-                <i class="pi pi-trash"></i>
-              </button>
-
-
-
-            </div>
+          <td style="padding: 1rem;">
+            <!-- Botón de permisos - Solo si tiene permiso para editar usuarios -->
+            <button *ngIf="tienePermiso('usuarios', 'editar') || currentRole === 'super'" 
+              (click)="abrirPermisos(user)" 
+              style="background: #3B82F6; border: none; width: 34px; height: 34px; border-radius: 10px; margin-right: 0.5rem; cursor: pointer; color: white; font-size: 1rem; transition: transform 0.2s;" 
+              onmouseover="this.style.transform='scale(1.05)'" 
+              onmouseout="this.style.transform='scale(1)'">
+              🔒
+            </button>
+            
+            <!-- Botón de editar - Solo si tiene permiso para editar usuarios -->
+            <button *ngIf="tienePermiso('usuarios', 'editar') || currentRole === 'super'" 
+              (click)="editarUsuario(user)" 
+              style="background: #10B981; border: none; width: 34px; height: 34px; border-radius: 10px; margin-right: 0.5rem; cursor: pointer; color: white; font-size: 1rem; transition: transform 0.2s;" 
+              onmouseover="this.style.transform='scale(1.05)'" 
+              onmouseout="this.style.transform='scale(1)'">
+              ✏️
+            </button>
+            
+            <!-- Botón de eliminar - Solo si tiene permiso para eliminar usuarios -->
+            <button *ngIf="tienePermiso('usuarios', 'eliminar') || currentRole === 'super'" 
+              (click)="eliminar(user)" 
+              style="background: #EF4444; border: none; width: 34px; height: 34px; border-radius: 10px; cursor: pointer; color: white; font-size: 1rem; transition: transform 0.2s;" 
+              onmouseover="this.style.transform='scale(1.05)'" 
+              onmouseout="this.style.transform='scale(1)'">
+              🗑️
+            </button>
+            
+            <!-- Mensaje si no tiene permisos para acciones -->
+            <span *ngIf="!tienePermiso('usuarios', 'editar') && !tienePermiso('usuarios', 'eliminar') && currentRole !== 'super'" 
+                  style="color: #94a3b8; font-size: 0.75rem;">
+              Sin permisos
+            </span>
           </td>
         </tr>
-      </ng-template>
-
-    </p-table>
+        <tr *ngIf="users.length === 0">
+          <td colspan="4" style="padding: 3rem; text-align: center; color: #64748b;">
+            No hay usuarios registrados
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
+
+<!-- MODAL PERMISOS (igual que antes) -->
+<div *ngIf="displayPermisosModal" class="modal-overlay" (click)="cerrarPermisos()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    
+    <div class="modal-header">
+      <h2>Permisos de Usuario</h2>
+      <button class="close-btn" (click)="cerrarPermisos()">×</button>
+    </div>
+    
+    <div *ngIf="usuarioSeleccionado" class="modal-body">
+      
+      <!-- Info usuario -->
+      <div class="user-info">
+        <div class="user-avatar">{{ usuarioSeleccionado.nombre.charAt(0).toUpperCase() }}</div>
+        <div>
+          <strong>{{ usuarioSeleccionado.nombre }}</strong>
+          <span>{{ usuarioSeleccionado.email }}</span>
+        </div>
+      </div>
+      
+      <!-- Tickets Section -->
+      <div class="seccion-card">
+        <div class="seccion-header">
+          <i class="pi pi-ticket"></i>
+          <h3>Tickets</h3>
+        </div>
+        <div class="permisos-grid">
+          <div class="permiso-card">
+            <label class="permiso-checkbox">
+              <input type="checkbox" [(ngModel)]="permisosEdit.tickets.ver">
+              <span class="checkbox-custom"></span>
+              <span class="permiso-nombre">Ver Tickets</span>
+            </label>
+            <p class="permiso-descripcion">Puede visualizar todos los tickets</p>
+          </div>
+          <div class="permiso-card">
+            <label class="permiso-checkbox">
+              <input type="checkbox" [(ngModel)]="permisosEdit.tickets.crear">
+              <span class="checkbox-custom"></span>
+              <span class="permiso-nombre">Crear Tickets</span>
+            </label>
+            <p class="permiso-descripcion">Puede crear nuevos tickets</p>
+          </div>
+          <div class="permiso-card">
+            <label class="permiso-checkbox">
+              <input type="checkbox" [(ngModel)]="permisosEdit.tickets.editar">
+              <span class="checkbox-custom"></span>
+              <span class="permiso-nombre">Editar Tickets</span>
+            </label>
+            <p class="permiso-descripcion">Puede modificar tickets existentes</p>
+          </div>
+          <div class="permiso-card">
+            <label class="permiso-checkbox">
+              <input type="checkbox" [(ngModel)]="permisosEdit.tickets.eliminar">
+              <span class="checkbox-custom"></span>
+              <span class="permiso-nombre">Eliminar Tickets</span>
+            </label>
+            <p class="permiso-descripcion">Puede eliminar tickets</p>
+          </div>
+          <div class="permiso-card">
+            <label class="permiso-checkbox">
+              <input type="checkbox" [(ngModel)]="permisosEdit.tickets.cambiarEstado">
+              <span class="checkbox-custom"></span>
+              <span class="permiso-nombre">Cambiar Estado</span>
+            </label>
+            <p class="permiso-descripcion">Puede cambiar el estado de los tickets</p>
+          </div>
+          <div class="permiso-card">
+            <label class="permiso-checkbox">
+              <input type="checkbox" [(ngModel)]="permisosEdit.tickets.comentar">
+              <span class="checkbox-custom"></span>
+              <span class="permiso-nombre">Comentar Tickets</span>
+            </label>
+            <p class="permiso-descripcion">Puede agregar comentarios a los tickets</p>
+          </div>
+          <div class="permiso-card">
+            <label class="permiso-checkbox">
+              <input type="checkbox" [(ngModel)]="permisosEdit.tickets.asignar">
+              <span class="checkbox-custom"></span>
+              <span class="permiso-nombre">Asignar Tickets</span>
+            </label>
+            <p class="permiso-descripcion">Puede reasignar tickets a otros usuarios</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Grupos Section -->
+      <div class="seccion-card">
+        <div class="seccion-header">
+          <i class="pi pi-users"></i>
+          <h3>Grupos</h3>
+        </div>
+        <div class="permisos-grid">
+          <div class="permiso-card">
+            <label class="permiso-checkbox">
+              <input type="checkbox" [(ngModel)]="permisosEdit.grupos.ver">
+              <span class="checkbox-custom"></span>
+              <span class="permiso-nombre">Ver Grupos</span>
+            </label>
+            <p class="permiso-descripcion">Puede ver los grupos existentes</p>
+          </div>
+          <div class="permiso-card">
+            <label class="permiso-checkbox">
+              <input type="checkbox" [(ngModel)]="permisosEdit.grupos.crear">
+              <span class="checkbox-custom"></span>
+              <span class="permiso-nombre">Crear Grupos</span>
+            </label>
+            <p class="permiso-descripcion">Puede crear nuevos grupos</p>
+          </div>
+          <div class="permiso-card">
+            <label class="permiso-checkbox">
+              <input type="checkbox" [(ngModel)]="permisosEdit.grupos.editar">
+              <span class="checkbox-custom"></span>
+              <span class="permiso-nombre">Editar Grupos</span>
+            </label>
+            <p class="permiso-descripcion">Puede editar grupos existentes</p>
+          </div>
+          <div class="permiso-card">
+            <label class="permiso-checkbox">
+              <input type="checkbox" [(ngModel)]="permisosEdit.grupos.eliminar">
+              <span class="checkbox-custom"></span>
+              <span class="permiso-nombre">Eliminar Grupos</span>
+            </label>
+            <p class="permiso-descripcion">Puede eliminar grupos</p>
+          </div>
+          <div class="permiso-card">
+            <label class="permiso-checkbox">
+              <input type="checkbox" [(ngModel)]="permisosEdit.grupos.agregarMiembros">
+              <span class="checkbox-custom"></span>
+              <span class="permiso-nombre">Añadir Miembros</span>
+            </label>
+            <p class="permiso-descripcion">Puede añadir usuarios a grupos</p>
+          </div>
+          <div class="permiso-card">
+            <label class="permiso-checkbox">
+              <input type="checkbox" [(ngModel)]="permisosEdit.grupos.quitarMiembros">
+              <span class="checkbox-custom"></span>
+              <span class="permiso-nombre">Quitar Miembros</span>
+            </label>
+            <p class="permiso-descripcion">Puede eliminar usuarios de grupos</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Usuarios Section -->
+      <div class="seccion-card">
+        <div class="seccion-header">
+          <i class="pi pi-user"></i>
+          <h3>Usuarios</h3>
+        </div>
+        <div class="permisos-grid">
+          <div class="permiso-card">
+            <label class="permiso-checkbox">
+              <input type="checkbox" [(ngModel)]="permisosEdit.usuarios.ver">
+              <span class="checkbox-custom"></span>
+              <span class="permiso-nombre">Ver Usuarios</span>
+            </label>
+            <p class="permiso-descripcion">Puede ver la lista de usuarios</p>
+          </div>
+          <div class="permiso-card">
+            <label class="permiso-checkbox">
+              <input type="checkbox" [(ngModel)]="permisosEdit.usuarios.crear">
+              <span class="checkbox-custom"></span>
+              <span class="permiso-nombre">Crear Usuarios</span>
+            </label>
+            <p class="permiso-descripcion">Puede registrar nuevos usuarios</p>
+          </div>
+          <div class="permiso-card">
+            <label class="permiso-checkbox">
+              <input type="checkbox" [(ngModel)]="permisosEdit.usuarios.editar">
+              <span class="checkbox-custom"></span>
+              <span class="permiso-nombre">Editar Usuarios</span>
+            </label>
+            <p class="permiso-descripcion">Puede editar usuarios y permisos</p>
+          </div>
+          <div class="permiso-card">
+            <label class="permiso-checkbox">
+              <input type="checkbox" [(ngModel)]="permisosEdit.usuarios.eliminar">
+              <span class="checkbox-custom"></span>
+              <span class="permiso-nombre">Eliminar Usuarios</span>
+            </label>
+            <p class="permiso-descripcion">Puede eliminar usuarios del sistema</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Botones -->
+      <div class="modal-footer">
+        <button class="btn-cancelar" (click)="cerrarPermisos()">Cancelar</button>
+        <button class="btn-guardar" (click)="guardarPermisos()">Guardar Permisos</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .modal-container {
+    background: white;
+    border-radius: 16px;
+    max-width: 800px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+  }
+  .modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #1e293b;
+  }
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #64748b;
+  }
+  .modal-body {
+    padding: 1.5rem;
+  }
+  .modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+  .btn-cancelar {
+    background: #f1f5f9;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #475569;
+  }
+  .btn-guardar {
+    background: #10B981;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+  }
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+  }
+  .user-avatar {
+    width: 48px;
+    height: 48px;
+    background: #3B82F6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.25rem;
+  }
+  .seccion-card {
+    margin-bottom: 1.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .seccion-header {
+    padding: 1rem;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .seccion-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #1e293b;
+  }
+  .permisos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+  }
+  .permiso-card {
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 8px;
+  }
+  .permiso-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    margin-bottom: 0.25rem;
+  }
+  .permiso-nombre {
+    font-weight: 500;
+    color: #1e293b;
+  }
+  .permiso-descripcion {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin: 0.25rem 0 0 1.5rem;
+  }
+  .checkbox-custom {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #cbd5e1;
+    border-radius: 4px;
+    display: inline-block;
+    position: relative;
+  }
+  input[type="checkbox"] {
+    display: none;
+  }
+  input[type="checkbox"]:checked + .checkbox-custom {
+    background: #10B981;
+    border-color: #10B981;
+  }
+  input[type="checkbox"]:checked + .checkbox-custom::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 10px;
+  }
+</style>
