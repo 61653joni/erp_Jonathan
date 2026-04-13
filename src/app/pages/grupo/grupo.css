@@ -545,3 +545,100 @@
   margin-bottom: 1rem;
   display: block;
 }
+
+/* ===== FIX MODAL TICKET ===== */
+
+/* Fondo y texto del dialog */
+:host ::ng-deep .p-dialog {
+  background: #ffffff !important;
+  color: #1f2937 !important;
+}
+
+:host ::ng-deep .p-dialog .p-dialog-header {
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+:host ::ng-deep .p-dialog .p-dialog-header .p-dialog-title {
+  color: #1f2937 !important;
+  font-weight: 700;
+}
+
+:host ::ng-deep .p-dialog .p-dialog-header-icon {
+  color: #6b7280 !important;
+}
+
+:host ::ng-deep .p-dialog .p-dialog-content {
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  padding: 1.5rem;
+}
+
+/* Labels */
+:host ::ng-deep .p-dialog .campo-label {
+  color: #374151 !important;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Inputs de texto y textarea */
+:host ::ng-deep .p-dialog input[type="text"],
+:host ::ng-deep .p-dialog input[type="date"],
+:host ::ng-deep .p-dialog textarea {
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+:host ::ng-deep .p-dialog input[type="text"]:focus,
+:host ::ng-deep .p-dialog input[type="date"]:focus,
+:host ::ng-deep .p-dialog textarea:focus {
+  outline: none !important;
+  border-color: #059669 !important;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15) !important;
+}
+
+/* Input deshabilitado (Creado por) */
+:host ::ng-deep .p-dialog input:disabled {
+  background: #f3f4f6 !important;
+  color: #6b7280 !important;
+  cursor: not-allowed;
+}
+
+/* Selects */
+:host ::ng-deep .p-dialog select {
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  width: 100%;
+  cursor: pointer;
+  appearance: auto;
+}
+
+:host ::ng-deep .p-dialog select:focus {
+  outline: none !important;
+  border-color: #059669 !important;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15) !important;
+}
+
+/* Placeholder */
+:host ::ng-deep .p-dialog input::placeholder,
+:host ::ng-deep .p-dialog textarea::placeholder {
+  color: #9ca3af !important;
+}
+
+/* Botones del modal */
+:host ::ng-deep .p-dialog .p-dialog-footer,
+:host ::ng-deep .p-dialog .modal-buttons {
+  background: #ffffff !important;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1rem;
+}

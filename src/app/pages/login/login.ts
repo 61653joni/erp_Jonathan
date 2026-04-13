@@ -8,14 +8,29 @@ import { NgIf } from '@angular/common';
 import { Navbar } from '../../shared/components/navbar/navbar';
 import { Footer } from '../../shared/components/footer/footer';
 
-type Role = 'miembro' | 'admin' | 'super';
-
 interface Permisos {
-  grupos: {
+  tickets: {
+    ver: boolean;
     crear: boolean;
     editar: boolean;
     eliminar: boolean;
+    cambiarEstado: boolean;
+    comentar: boolean;
+    asignar: boolean;
+  };
+  grupos: {
     ver: boolean;
+    crear: boolean;
+    editar: boolean;
+    eliminar: boolean;
+    agregarMiembros: boolean;
+    quitarMiembros: boolean;
+  };
+  usuarios: {
+    ver: boolean;
+    crear: boolean;
+    editar: boolean;
+    eliminar: boolean;
   };
 }
 
@@ -23,40 +38,66 @@ interface User {
   email: string;
   password: string;
   nombre: string;
-  role: Role;
   estado: 'activo' | 'inactivo';
   permisos: Permisos;
 }
 
 const USERS: User[] = [
   {
-    email: 'miembro@gmail.com',
+    email: 'usuario1@example.com',
     password: '123456',
-    role: 'miembro',
     nombre: 'Miembro',
     estado: 'activo',
     permisos: {
-      grupos: { crear: false, editar: false, eliminar: false, ver: true }
+      tickets: {
+        ver: true, crear: true, editar: true, eliminar: true,
+        cambiarEstado: true, comentar: true, asignar: true
+      },
+      grupos: {
+        ver: true, crear: true, editar: true, eliminar: true,
+        agregarMiembros: true, quitarMiembros: true
+      },
+      usuarios: {
+        ver: true, crear: true, editar: true, eliminar: true
+      }
     }
   },
   {
-    email: 'admin@gmail.com',
+    email: 'usuario2@example.com',
     password: '123456',
-    role: 'admin',
-    nombre: 'Administrador',
+    nombre: 'Jonathan',
     estado: 'activo',
     permisos: {
-      grupos: { crear: true, editar: true, eliminar: false, ver: true }
+      tickets: {
+        ver: true, crear: true, editar: true, eliminar: false,
+        cambiarEstado: true, comentar: true, asignar: true
+      },
+      grupos: {
+        ver: true, crear: true, editar: true, eliminar: false,
+        agregarMiembros: true, quitarMiembros: false
+      },
+      usuarios: {
+        ver: true, crear: false, editar: false, eliminar: false
+      }
     }
   },
   {
-    email: 'super@gmail.com',
+    email: 'usuario3@example.com',
     password: '123456',
-    role: 'super',
-    nombre: 'Super Usuario',
+    nombre: 'Juan',
     estado: 'activo',
     permisos: {
-      grupos: { crear: true, editar: true, eliminar: true, ver: true }
+      tickets: {
+        ver: true, crear: true, editar: true, eliminar: true,
+        cambiarEstado: true, comentar: true, asignar: true
+      },
+      grupos: {
+        ver: true, crear: true, editar: true, eliminar: true,
+        agregarMiembros: true, quitarMiembros: true
+      },
+      usuarios: {
+        ver: true, crear: true, editar: true, eliminar: true
+      }
     }
   }
 ];
@@ -89,12 +130,6 @@ export class Login implements OnInit {
 
     if (!existing.length) {
       localStorage.setItem('users', JSON.stringify(USERS));
-    } else {
-      const updated = existing.map(u => ({
-        ...u,
-        estado: u.estado || 'activo'
-      }));
-      localStorage.setItem('users', JSON.stringify(updated));
     }
   }
 
@@ -116,12 +151,11 @@ export class Login implements OnInit {
     }
 
     localStorage.setItem('currentUser', JSON.stringify(user));
-    localStorage.setItem('role', user.role);
     localStorage.setItem('permisos', JSON.stringify(user.permisos));
     localStorage.setItem('email', user.email);
     localStorage.setItem('nombre', user.nombre);
+    localStorage.removeItem('role');
 
     this.router.navigate(['/dashboard']);
   }
-
 }

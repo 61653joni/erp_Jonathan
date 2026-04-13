@@ -38,77 +38,45 @@ interface Permisos {
 export class Sidebar implements OnInit {
 
   email = '';
-  role = '';
+  nombre = '';
   permisos: Permisos | null = null;
 
   constructor(private router: Router) {}
 
   ngOnInit() {
     this.email = localStorage.getItem('email') || '';
-    this.role = localStorage.getItem('role') || '';
-    
-    // Cargar permisos del usuario actual
+    this.nombre = localStorage.getItem('nombre') || '';
     this.cargarPermisos();
   }
 
   cargarPermisos() {
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const currentUser = users.find((u: any) => u.email === this.email);
+    const permisosStr = localStorage.getItem('permisos');
     
-    if (currentUser && currentUser.permisos) {
-      this.permisos = currentUser.permisos;
+    if (permisosStr) {
+      this.permisos = JSON.parse(permisosStr);
     } else {
-      // Si no hay permisos definidos, establecer valores por defecto según el rol
-      if (this.role === 'super') {
-        // Super admin tiene todos los permisos
-        this.permisos = {
-          tickets: {
-            ver: true, crear: true, editar: true, eliminar: true,
-            cambiarEstado: true, comentar: true, asignar: true
-          },
-          grupos: {
-            ver: true, crear: true, editar: true, eliminar: true,
-            agregarMiembros: true, quitarMiembros: true
-          },
-          usuarios: {
-            ver: true, crear: true, editar: true, eliminar: true
-          }
-        };
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const currentUser = users.find((u: any) => u.email === this.email);
+      
+      if (currentUser && currentUser.permisos) {
+        this.permisos = currentUser.permisos;
+        localStorage.setItem('permisos', JSON.stringify(this.permisos));
       } else {
-        // Usuarios normales tienen permisos limitados
         this.permisos = {
-          tickets: {
-            ver: true, crear: false, editar: false, eliminar: false,
-            cambiarEstado: false, comentar: false, asignar: false
-          },
-          grupos: {
-            ver: true, crear: false, editar: false, eliminar: false,
-            agregarMiembros: false, quitarMiembros: false
-          },
-          usuarios: {
-            ver: false, crear: false, editar: false, eliminar: false
-          }
+          tickets: { ver: true, crear: false, editar: false, eliminar: false, cambiarEstado: false, comentar: false, asignar: false },
+          grupos: { ver: true, crear: false, editar: false, eliminar: false, agregarMiembros: false, quitarMiembros: false },
+          usuarios: { ver: false, crear: false, editar: false, eliminar: false }
         };
       }
     }
   }
 
-  // Función para verificar si tiene permiso para ver una sección
   tienePermiso(categoria: keyof Permisos, accion: string = 'ver'): boolean {
-    // Super admin tiene todos los permisos
-    if (this.role === 'super') {
-      return true;
-    }
-    
-    // Si no hay permisos definidos, retornar false
     if (!this.permisos) {
       return false;
     }
     
-    // Verificar el permiso específico
     switch(categoria) {
-      case 'tickets':
-        return this.permisos.tickets[accion as keyof typeof this.permisos.tickets] || false;
       case 'grupos':
         return this.permisos.grupos[accion as keyof typeof this.permisos.grupos] || false;
       case 'usuarios':
@@ -120,7 +88,7 @@ export class Sidebar implements OnInit {
 
   logout() {
     localStorage.removeItem('email');
-    localStorage.removeItem('role');
+    localStorage.removeItem('permisos');
     localStorage.removeItem('currentUser');
     localStorage.removeItem('nombre');
     

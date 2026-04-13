@@ -20,8 +20,8 @@
       Menú
     </span>
 
-    <!-- USUARIOS - Solo si tiene permiso para ver usuarios o es admin/super -->
-    <a *ngIf="role === 'super' || tienePermiso('usuarios', 'ver')"
+    <!-- USUARIOS - Solo si tiene permiso para ver usuarios -->
+    <a *ngIf="tienePermiso('usuarios', 'ver')"
       class="flex align-items-center gap-3 px-3 py-2 border-round-lg cursor-pointer text-color no-underline font-medium"
       routerLink="/dashboard/usuarios">
 
@@ -58,8 +58,21 @@
       <span>Perfil</span>
     </a>
     
+    <!-- TICKETS - Solo si tiene permiso para ver tickets -->
+    <a *ngIf="tienePermiso('tickets', 'ver')"
+      class="flex align-items-center gap-3 px-3 py-2 border-round-lg cursor-pointer text-color no-underline font-medium"
+      routerLink="/dashboard/tickets">
+
+      <div class="flex align-items-center justify-content-center border-round"
+        style="width:30px;height:30px;background:var(--orange-900)">
+        <i class="pi pi-ticket text-orange-400 text-sm"></i>
+      </div>
+
+      <span>Tickets</span>
+    </a>
+    
     <!-- Mensaje cuando no hay menús disponibles -->
-    <div *ngIf="!tienePermiso('grupos', 'ver') && !tienePermiso('usuarios', 'ver') && role !== 'super'" 
+    <div *ngIf="!tienePermiso('grupos', 'ver') && !tienePermiso('usuarios', 'ver') && !tienePermiso('tickets', 'ver')" 
          class="text-center mt-4 p-3 text-color-secondary">
       <i class="pi pi-info-circle" style="font-size: 1.5rem;"></i>
       <p class="text-sm mt-2">No tienes acceso a módulos adicionales</p>
@@ -75,15 +88,15 @@
       <div
         class="flex align-items-center justify-content-center border-round-circle bg-primary font-bold text-white text-sm"
         style="width:34px;height:34px">
-        {{ email[0] | uppercase }}
+        {{ (nombre ? nombre[0] : email[0]) | uppercase }}
       </div>
 
       <div class="flex flex-column">
         <span class="font-semibold text-color text-sm">
-          {{ email }}
+          {{ nombre || email || 'Usuario' }}
         </span>
         <span class="text-xs text-color-secondary">
-          {{ role }}
+          {{ email }}
         </span>
       </div>
 
